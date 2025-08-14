@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stylish Currency Converter</title>
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, #6e8efb, #a777e3);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+    .converter {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(12px);
+        border-radius: 15px;
+        padding: 30px;
+        width: 380px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        color: white;
+        animation: fadeIn 0.8s ease-in-out;
+    }
+    @keyframes fadeIn {
+        from {opacity: 0; transform: translateY(20px);}
+        to {opacity: 1; transform: translateY(0);}
+    }
+    h2 {
+        margin-bottom: 20px;
+        text-align: center;
+        font-weight: 600;
+        letter-spacing: 1px;
+    }
+    label {
+        display: block;
+        font-size: 14px;
+        margin-bottom: 5px;
+        opacity: 0.9;
+    }
+    input, select {
+        width: 100%;
+        padding: 12px;
+        font-size: 15px;
+        border: none;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        outline: none;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+    }
+    option {
+        color: black;
+    }
+    .currency-row {
+        display: flex;
+        gap: 10px;
+    }
+    button {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(90deg, #ff758c, #ff7eb3);
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 500;
+        color: white;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 15px rgba(255, 118, 136, 0.4);
+    }
+    .result {
+        margin-top: 20px;
+        font-size: 18px;
+        font-weight: 500;
+        display: none;
+        animation: fadeIn 0.5s ease-in-out;
+        text-align: center;
+    }
+    .rate-info {
+        font-size: 14px;
+        margin-top: 8px;
+        opacity: 0.85;
+        text-align: center;
+    }
+</style>
+</head>
+<body>
+
+<div class="converter">
+    <h2>💱 Currency Converter</h2>
+    
+    <label for="amount">Amount</label>
+    <input type="number" id="amount" placeholder="Enter amount">
+    
+    <div class="currency-row">
+        <div style="flex:1;">
+            <label for="fromCurrency">From</label>
+            <select id="fromCurrency">
+                <option value="USD">🇺🇸 USD - US Dollar</option>
+                <option value="EUR">🇪🇺 EUR - Euro</option>
+                <option value="GBP">🇬🇧 GBP - Pound</option>
+                <option value="INR">🇮🇳 INR - Rupee</option>
+            </select>
+        </div>
+        
+        <div style="flex:1;">
+            <label for="toCurrency">To</label>
+            <select id="toCurrency">
+                <option value="USD">🇺🇸 USD - US Dollar</option>
+                <option value="EUR">🇪🇺 EUR - Euro</option>
+                <option value="GBP">🇬🇧 GBP - Pound</option>
+                <option value="INR">🇮🇳 INR - Rupee</option>
+            </select>
+        </div>
+    </div>
+
+    <button onclick="convertCurrency()">Convert</button>
+
+    <div class="result" id="result"></div>
+    <div class="rate-info" id="rateInfo"></div>
+</div>
+
+<script>
+    const rates = {
+        "USD": 1,
+        "EUR": 0.92,
+        "GBP": 0.78,
+        "INR": 83.12
+    };
+
+    function formatNumber(num) {
+        return num.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    }
+
+    function convertCurrency() {
+        let amount = parseFloat(document.getElementById("amount").value);
+        let from = document.getElementById("fromCurrency").value;
+        let to = document.getElementById("toCurrency").value;
+        let resultDiv = document.getElementById("result");
+        let rateInfo = document.getElementById("rateInfo");
+
+        if (isNaN(amount) || amount <= 0) {
+            resultDiv.style.display = "block";
+            resultDiv.style.color = "#ffb3b3";
+            resultDiv.textContent = "⚠ Please enter a valid amount.";
+            rateInfo.textContent = "";
+            return;
+        }
+
+        let amountInUSD = amount / rates[from];
+        let converted = amountInUSD * rates[to];
+
+        resultDiv.style.display = "block";
+        resultDiv.style.color = "white";
+        resultDiv.textContent = `${formatNumber(amount)} ${from} = ${formatNumber(converted)} ${to}`;
+
+        let exchangeRate = rates[to] / rates[from];
+        rateInfo.textContent = `1 ${from} = ${formatNumber(exchangeRate)} ${to}`;
+    }
+</script>
+
+</body>
+</html>
